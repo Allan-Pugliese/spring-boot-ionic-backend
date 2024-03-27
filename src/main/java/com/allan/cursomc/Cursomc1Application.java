@@ -20,7 +20,7 @@ public class Cursomc1Application implements CommandLineRunner {
 
 	private final ProdutoRepository produtoRepository;
 
-    Cursomc1Application(ProdutoRepository produtoRepository) {
+	Cursomc1Application(ProdutoRepository produtoRepository) {
 		this.produtoRepository = produtoRepository;
 	}
 

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 //importação do mapeamento
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +23,9 @@ public class Categoria implements Serializable {
 	private Integer id;
 	private String nome;
 
-	@ManyToMany(mappedBy="categorias")
+	// Json controla o retorno dos dados
+	@JsonManagedReference
+	@ManyToMany(mappedBy = "categorias")
 	private List<Produto> produtos = new ArrayList<>();
 
 	public Categoria() {
