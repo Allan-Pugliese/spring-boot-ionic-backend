@@ -2,6 +2,7 @@ package com.allan.cursomc;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -13,6 +14,7 @@ import com.allan.cursomc.domain.Cidade;
 import com.allan.cursomc.domain.Cliente;
 import com.allan.cursomc.domain.Endereco;
 import com.allan.cursomc.domain.Estado;
+import com.allan.cursomc.domain.ItemPedido;
 import com.allan.cursomc.domain.Pagamento;
 import com.allan.cursomc.domain.PagamentoComBoleto;
 import com.allan.cursomc.domain.PagamentoComCartao;
@@ -25,6 +27,7 @@ import com.allan.cursomc.repositeories.CidadeRepository;
 import com.allan.cursomc.repositeories.ClienteRepository;
 import com.allan.cursomc.repositeories.EnderecoRepository;
 import com.allan.cursomc.repositeories.EstadoRepository;
+import com.allan.cursomc.repositeories.ItemPedidoRepository;
 import com.allan.cursomc.repositeories.PagamentoRepository;
 import com.allan.cursomc.repositeories.PedidoRepository;
 import com.allan.cursomc.repositeories.ProdutoRepository;
@@ -56,6 +59,9 @@ public class Cursomc1Application implements CommandLineRunner {
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
 
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
+
 	public Cursomc1Application() {
 		// TODO Auto-generated constructor stub
 	}
@@ -66,10 +72,13 @@ public class Cursomc1Application implements CommandLineRunner {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Cursomc1Application.class, args);
+
+		Locale.setDefault(Locale.US);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
+
 		// Definindo formato de horas
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
@@ -86,7 +95,7 @@ public class Cursomc1Application implements CommandLineRunner {
 
 		Produto p3 = new Produto(null, "Mouse", 80.00);
 
-		// Instanciando Cidades e estados
+		// Instanciando cidades e estados
 
 		Estado est1 = new Estado(null, "Minas Gerais");
 
@@ -141,7 +150,8 @@ public class Cursomc1Application implements CommandLineRunner {
 		Pagamento pag1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, null);
 		ped1.setPagamento(pag1);
 
-		Pagamento pag2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("30/05/2024 14:40"), null);
+		Pagamento pag2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("30/05/2024 14:40"),
+				null);
 		ped2.setPagamento(pag2);
 
 		Pagamento pag3 = new PagamentoComCartao(null, EstadoPagamento.CANCELADO, ped3, 2);
@@ -157,6 +167,24 @@ public class Cursomc1Application implements CommandLineRunner {
 		cli2.getPedidos().addAll(Arrays.asList(ped2));
 		cli3.getPedidos().addAll(Arrays.asList(ped3, ped4));
 
+		// Instanciando os itens do pedido
+
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+
+		ItemPedido ip2 = new ItemPedido(ped2, p2, 0.00, 1, 80.00);
+
+		ItemPedido ip3 = new ItemPedido(ped3, p3, 100.00, 1, 800.00);
+
+		ItemPedido ip4 = new ItemPedido(ped4, p3, 100.00, 2, 160.00);
+
+		ped1.getItens().addAll(Arrays.asList(ip1));
+		ped2.getItens().addAll(Arrays.asList(ip2));
+		ped3.getItens().addAll(Arrays.asList(ip3, ip4));
+
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip2));
+		p3.getItens().addAll(Arrays.asList(ip3, ip4));
+
 		// Salvando os dados
 
 		categoriaRepository.saveAll(Arrays.asList(cat1, cat2));
@@ -167,6 +195,8 @@ public class Cursomc1Application implements CommandLineRunner {
 		enderecoRepository.saveAll(Arrays.asList(e1, e2, e3, e4));
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2, ped3, ped4));
 		pagamentoRepository.saveAll(Arrays.asList(pag1, pag2, pag3, pag4));
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3, ip4));
+		
 	}
 
 }
